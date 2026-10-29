@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Добавление склада{% endblock %}
+
+{% block body %}
+    <h1>Создать новый склад</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            {{ form_start(form) }}
+
+            <div class="mb-3">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                <div class="text-danger">{{ form_errors(form.name) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.location) }}
+                {{ form_widget(form.location) }}
+                <div class="text-danger">{{ form_errors(form.location) }}</div>
+            </div>
+
+            {{ form_row(form.save) }}
+            {{ form_end(form) }}
+
+            <a href="{{ path('warehouse_list') }}" class="btn btn-link mt-3">Вернуться к списку</a>
+        </div>
+    </div>
+{% endblock %}

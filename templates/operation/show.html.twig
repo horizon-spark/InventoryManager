@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Операция #{{ operation.id }}{% endblock %}
+
+{% block body %}
+    <h1>Операция #{{ operation.id }}</h1>
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">{{ operation.id }}</dd>
+
+        <dt class="col-sm-3">Дата</dt>
+        <dd class="col-sm-9">{{ operation.createdAt ? operation.createdAt|date('d.m.Y H:i') : '—' }}</dd>
+
+        <dt class="col-sm-3">Тип</dt>
+        <dd class="col-sm-9">{{ operation.type }}</dd>
+
+        <dt class="col-sm-3">Товар</dt>
+        <dd class="col-sm-9">
+            {% if operation.product %}
+                <a href="{{ path('product_show', {id: operation.product.id}) }}">
+                    {{ operation.product.name }}
+                </a>
+                <small class="text-muted">({{ operation.product.sku }})</small>
+            {% else %}—{% endif %}
+        </dd>
+
+        <dt class="col-sm-3">Склад</dt>
+        <dd class="col-sm-9">
+            {% if operation.warehouse %}
+                <a href="{{ path('warehouse_show', {id: operation.warehouse.id}) }}">
+                    {{ operation.warehouse.name }}
+                </a>
+            {% else %}—{% endif %}
+        </dd>
+
+        <dt class="col-sm-3">Количество</dt>
+        <dd class="col-sm-9">{{ operation.quantity }}</dd>
+
+        <dt class="col-sm-3">Комментарий</dt>
+        <dd class="col-sm-9">{{ operation.comment|default('—') }}</dd>
+    </dl>
+
+    <a href="{{ path('operation_list') }}" class="btn btn-link">← К списку</a>
+{% endblock %}

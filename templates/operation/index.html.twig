@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список операций{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Операции</h1>
+        <a href="{{ path('operation_create') }}" class="btn btn-primary">Добавить операцию</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Товар</th>
+            <th>Склад</th>
+            <th>Кол-во</th>
+            <th>Комментарий</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for operation in operations %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ operation.createdAt ? operation.createdAt|date('d.m.Y H:i') : '—' }}</td>
+                <td>
+                    {% if operation.type == 'in' %}
+                        <span class="badge bg-success">Приход</span>
+                    {% elseif operation.type == 'out' %}
+                        <span class="badge bg-danger">Расход</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ operation.type }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ operation.product ? operation.product.name : '—' }}</td>
+                <td>{{ operation.warehouse ? operation.warehouse.name : '—' }}</td>
+                <td>{{ operation.quantity }}</td>
+                <td>{{ operation.comment|default('—') }}</td>
+                <td>
+                    <a href="{{ path('operation_show', {id: operation.id}) }}"
+                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8" class="text-center text-muted">Записи не найдены</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

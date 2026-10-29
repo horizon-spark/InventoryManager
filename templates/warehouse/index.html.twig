@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список складов{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Склады</h1>
+        <a href="{{ path('warehouse_create') }}" class="btn btn-primary">Добавить склад</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Название</th>
+            <th>Расположение</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for warehouse in warehouses %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ warehouse.name }}</td>
+                <td>{{ warehouse.location|default('—') }}</td>
+                <td>
+                    <a href="{{ path('warehouse_show', {id: warehouse.id}) }}"
+                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">Записи не найдены</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

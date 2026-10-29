@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Товар #{{ product.id }}{% endblock %}
+
+{% block body %}
+    <h1>{{ product.name }}</h1>
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">{{ product.id }}</dd>
+
+        <dt class="col-sm-3">Артикул (SKU)</dt>
+        <dd class="col-sm-9">{{ product.sku }}</dd>
+
+        <dt class="col-sm-3">Цена</dt>
+        <dd class="col-sm-9">{{ product.price }}</dd>
+
+        <dt class="col-sm-3">Категория</dt>
+        <dd class="col-sm-9">{{ product.category ? product.category.name : 'Без категории' }}</dd>
+    </dl>
+
+    <a href="{{ path('product_list') }}" class="btn btn-link">← К списку</a>
+{% endblock %}

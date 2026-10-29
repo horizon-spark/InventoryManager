@@ -4,11 +4,12 @@ namespace App\Form;
 
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CategoryType extends AbstractType
 {
@@ -17,21 +18,27 @@ class CategoryType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Название категории',
-                'attr' => ['class' => 'form-control']
+                'attr'  => ['class' => 'form-control'],
+                'constraints' => [
+                    new Assert\NotBlank(message: 'Укажите название'),
+                    new Assert\Length(max: 255),
+                ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Описание (опционально)',
+                'label'    => 'Описание (опционально)',
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'rows' => 3]
+                'attr'     => ['class' => 'form-control', 'rows' => 3],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Сохранить',
-                'attr' => ['class' => 'btn btn-success mt-3']
+                'attr'  => ['class' => 'btn btn-success mt-3'],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => Category::class]);
+        $resolver->setDefaults([
+            'data_class' => Category::class,
+        ]);
     }
 }

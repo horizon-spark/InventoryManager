@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Категория #{{ category.id }}{% endblock %}
+
+{% block body %}
+    <h1>{{ category.name }}</h1>
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">{{ category.id }}</dd>
+
+        <dt class="col-sm-3">Название</dt>
+        <dd class="col-sm-9">{{ category.name }}</dd>
+
+        <dt class="col-sm-3">Описание</dt>
+        <dd class="col-sm-9">{{ category.description|default('Нет описания') }}</dd>
+
+        <dt class="col-sm-3">Товаров</dt>
+        <dd class="col-sm-9">{{ category.products|length }}</dd>
+    </dl>
+
+    {% if category.products is not empty %}
+        <h5 class="mt-4">Товары в категории</h5>
+        <ul class="list-group">
+            {% for product in category.products %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ product.name }} <small class="text-muted">({{ product.sku }})</small></span>
+                    <a href="{{ path('product_show', {id: product.id}) }}"
+                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ path('category_list') }}" class="btn btn-link mt-3">← К списку</a>
+{% endblock %}

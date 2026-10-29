@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Оборудование (товары)</h1>
+        <a href="{{ path('product_create') }}" class="btn btn-primary">Добавить товар</a>
+    </div>
+
+    {# Поиск по имени (бывший /filter) #}
+    <form method="get" action="{{ path('product_list') }}" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input type="text" name="name" value="{{ name }}" class="form-control"
+                   placeholder="Поиск по названию">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-secondary">Найти</button>
+            {% if name %}
+                <a href="{{ path('product_list') }}" class="btn btn-link">Сбросить</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Название</th>
+            <th>Артикул (SKU)</th>
+            <th>Цена</th>
+            <th>Категория</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.category ? product.category.name : 'Без категории' }}</td>
+                <td>
+                    <a href="{{ path('product_show', {id: product.id}) }}"
+                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Записи не найдены</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

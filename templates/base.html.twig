@@ -3,22 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Мой проект на Symfony{% endblock %}</title>
-    
-    <!-- Подключение Bootstrap 5 -->
+    <title>{% block title %}Система учёта оборудования{% endblock %}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="/">Индивидуальный проект</a>
+            <a class="navbar-brand" href="{{ path('product_list') }}">Учёт оборудования</a>
+
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNav"
+                    aria-controls="mainNav"
+                    aria-expanded="false"
+                    aria-label="Переключить навигацию">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mx-lg-0 ms-lg-auto mb-2 mb-lg-0 text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('product_list') }}">Товары</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('operation_list') }}">Операции</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('category_list') }}">Категории</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('warehouse_list') }}">Склады</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <main class="container">
-        <!-- Глобальный вывод Flash-сообщений (уведомлений) -->
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="alert alert-{{ label }}">
@@ -27,13 +51,14 @@
             {% endfor %}
         {% endfor %}
 
-        <!-- Основной контент дочерних страниц -->
         {% block body %}{% endblock %}
     </main>
 
     <footer class="container mt-5 border-top pt-3 text-muted">
-        &copy; {{ 'now'|date('Y') }} Лабораторная работа №3
+        &copy; {{ 'now'|date('Y') }} Лабораторная работа №3 — Система учёта оборудования
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block javascripts %}{% endblock %}
 </body>

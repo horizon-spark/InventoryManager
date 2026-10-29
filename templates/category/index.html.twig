@@ -5,30 +5,36 @@
 {% block body %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Справочник категорий</h1>
-        <a href="{{ path('category_new') }}" class="btn btn-primary">Добавить новую</a>
+        <a href="{{ path('category_create') }}" class="btn btn-primary">Добавить новую</a>
     </div>
 
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Название</th>
-                <th>Описание</th>
-            </tr>
+        <tr>
+            <th>#</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Товаров</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
-            {# Цикл for с проверкой на пустоту (else) #}
-            {% for category in categories %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ category.name }}</td>
-                    <td>{{ category.description|default('Нет описания') }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3" class="text-center text-muted">Записи не найдены</td>
-                </tr>
-            {% endfor %}
+        {% for category in categories %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description|default('Нет описания') }}</td>
+                <td>{{ category.products|length }}</td>
+                <td>
+                    <a href="{{ path('category_show', {id: category.id}) }}"
+                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">Записи не найдены</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

@@ -6,8 +6,10 @@ use App\Repository\WarehouseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WarehouseRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'Склад с таким названием уже существует')]
 class Warehouse
 {
     #[ORM\Id]

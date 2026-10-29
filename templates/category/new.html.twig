@@ -3,29 +3,27 @@
 {% block title %}Добавление категории{% endblock %}
 
 {% block body %}
-    <h1>Создать новую запись</h1>
+    <h1>Создать новую категорию</h1>
 
     <div class="card mt-4">
         <div class="card-body">
-            {# Автоматическая генерация HTML-формы с защитой от CSRF #}
             {{ form_start(form) }}
-                
-                <div class="mb-3">
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                    <div class="text-danger">{{ form_errors(form.name) }}</div>
-                </div>
 
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                    <div class="text-danger">{{ form_errors(form.description) }}</div>
-                </div>
-                
-                {{ form_row(form.save) }}
-            
+            <div class="mb-3">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                <div class="text-danger">{{ form_errors(form.name) }}</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                <div class="text-danger">{{ form_errors(form.description) }}</div>
+            </div>
+
+            {{ form_row(form.save) }}
             {{ form_end(form) }}
-            
+
             <a href="{{ path('category_list') }}" class="btn btn-link mt-3">Вернуться к списку</a>
         </div>
     </div>
