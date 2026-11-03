@@ -46,6 +46,9 @@ class Product
     #[Assert\Positive(message: 'Цена должна быть положительным числом.')]
     private ?string $price = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isArchived = false;
+
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[Assert\NotNull(message: 'Выберите категорию для товара.')]
     private ?Category $category = null;
@@ -98,6 +101,18 @@ class Product
     public function setPrice(string $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

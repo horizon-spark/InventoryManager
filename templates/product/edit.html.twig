@@ -5,6 +5,13 @@
 {% block body %}
     <h1>Редактирование товара: {{ product.name }}</h1>
 
+    {% if product.archived %}
+        <div class="alert alert-warning">
+            Товар в архиве. Изменения сохранятся, но в списке активных он не появится,
+            пока не восстановите его.
+        </div>
+    {% endif %}
+
     <div class="card mt-4">
         <div class="card-body">
             {{ form_start(form) }}

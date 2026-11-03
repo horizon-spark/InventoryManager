@@ -25,13 +25,17 @@ class ProductController extends AbstractController
     /**
      * Список товаров (страница + фильтр по имени через ?name=).
      */
-    #[Route('', name: 'list', methods: ['GET'])]
+   #[Route('', name: 'list', methods: ['GET'])]
     public function list(Request $request): Response
     {
-        $name = (string) $request->query->get('name', '');
+        $name     = (string) $request->query->get('name', '');
+        $archived = $request->query->getBoolean('archived'); // ?archived=1
 
         $qb = $this->products->createQueryBuilder('p')
-            ->orderBy('p.id', 'ASC');
+            ->leftJoin('p.category', 'c')->addSelect('c')
+            ->orderBy('p.id', 'ASC')
+            ->andWhere('p.isArchived = :archived')
+            ->setParameter('archived', $archived);
 
         if ($name !== '') {
             $qb->andWhere('p.name LIKE :name')
@@ -41,6 +45,7 @@ class ProductController extends AbstractController
         return $this->render('product/index.html.twig', [
             'products' => $qb->getQuery()->getResult(),
             'name'     => $name,
+            'archived' => $archived,
         ]);
     }
 
@@ -118,14 +123,37 @@ class ProductController extends AbstractController
     {
         $token = (string) $request->request->get('_token');
 
-        if ($this->isCsrfTokenValid('delete_product_' . $product->getId(), $token)) {
-            $this->em->remove($product);
-            $this->em->flush();
-
-            $this->addFlash('success', 'Товар удалён.');
-        } else {
+        if (!$this->isCsrfTokenValid('delete_product_' . $product->getId(), $token)) {
             $this->addFlash('danger', 'Неверный CSRF-токен. Удаление отменено.');
+            return $this->redirectToRoute('product_list');
         }
+
+        // Мягкое удаление: физически не удаляем — иначе нарушим FK на operation
+        $product->setIsArchived(true);
+        $this->em->flush();
+
+        $this->addFlash('success', sprintf('Товар «%s» перемещён в архив.', $product->getName()));
+
+        return $this->redirectToRoute('product_list');
+    }
+
+    /**
+     * Восстановление товара из архива.
+     */
+    #[Route('/{id}/restore', name: 'restore', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function restore(Request $request, Product $product): Response
+    {
+        $token = (string) $request->request->get('_token');
+
+        if (!$this->isCsrfTokenValid('restore_product_' . $product->getId(), $token)) {
+            $this->addFlash('danger', 'Неверный CSRF-токен.');
+            return $this->redirectToRoute('product_list');
+        }
+
+        $product->setIsArchived(false);
+        $this->em->flush();
+
+        $this->addFlash('success', sprintf('Товар «%s» восстановлен.', $product->getName()));
 
         return $this->redirectToRoute('product_list');
     }

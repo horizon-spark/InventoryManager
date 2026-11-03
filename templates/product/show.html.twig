@@ -5,6 +5,12 @@
 {% block body %}
     <h1>{{ product.name }}</h1>
 
+    {% if product.archived %}
+        <div class="alert alert-warning">
+            Товар находится в архиве. Действия по нему недоступны.
+        </div>
+    {% endif %}
+
     <dl class="row mt-4">
         <dt class="col-sm-3">ID</dt>
         <dd class="col-sm-9">{{ product.id }}</dd>
