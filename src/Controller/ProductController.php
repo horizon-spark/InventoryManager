@@ -83,4 +83,50 @@ class ProductController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * Редактирование товара.
+     * Используется тот же ProductType, что и для создания.
+     */
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function edit(Request $request, Product $product): Response
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // ВАЖНО: persist() не нужен — объект уже в UnitOfWork Doctrine.
+            $this->em->flush();
+
+            $this->addFlash('success', 'Товар успешно обновлён!');
+
+            return $this->redirectToRoute('product_list');
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'product' => $product,
+            'form'    => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Удаление товара.
+     * Только POST + проверка CSRF-токена.
+     */
+    #[Route('/{id}', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function delete(Request $request, Product $product): Response
+    {
+        $token = (string) $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete_product_' . $product->getId(), $token)) {
+            $this->em->remove($product);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Товар удалён.');
+        } else {
+            $this->addFlash('danger', 'Неверный CSRF-токен. Удаление отменено.');
+        }
+
+        return $this->redirectToRoute('product_list');
+    }
 }

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[UniqueEntity(fields: ['sku'], message: 'Товар с таким SKU уже существует')]
@@ -19,15 +20,34 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Название товара обязательно для заполнения.')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Название должно содержать минимум {{ limit }} символа.',
+        maxMessage: 'Название не может быть длиннее {{ limit }} символов.'
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 64)]
+    #[Assert\NotBlank(message: 'SKU обязателен для заполнения.')]
+    #[Assert\Length(
+        max: 64,
+        maxMessage: 'SKU не может быть длиннее {{ limit }} символов.'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]{2,5}-\d{3,6}$/',
+        message: 'SKU должен быть в формате ABC-123 (латинские буквы, дефис, цифры).'
+    )]
     private ?string $sku = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Assert\NotBlank(message: 'Цена обязательна для заполнения.')]
+    #[Assert\Positive(message: 'Цена должна быть положительным числом.')]
     private ?string $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[Assert\NotNull(message: 'Выберите категорию для товара.')]
     private ?Category $category = null;
 
     /**
@@ -115,7 +135,6 @@ class Product
     public function removeOperation(Operation $operation): static
     {
         if ($this->operations->removeElement($operation)) {
-            // set the owning side to null (unless already changed)
             if ($operation->getProduct() === $this) {
                 $operation->setProduct(null);
             }

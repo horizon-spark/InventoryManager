@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductType extends AbstractType
 {
@@ -21,34 +20,27 @@ class ProductType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Название товара',
                 'attr'  => ['class' => 'form-control'],
-                'constraints' => [
-                    new Assert\NotBlank(message: 'Укажите название'),
-                    new Assert\Length(max: 255),
-                ],
+                // Валидация — в сущности Product (#[Assert\...])
             ])
             ->add('sku', TextType::class, [
                 'label' => 'Артикул (SKU)',
-                'attr'  => ['class' => 'form-control'],
-                'constraints' => [
-                    new Assert\NotBlank(message: 'Укажите артикул'),
-                    new Assert\Length(max: 64),
+                'attr'  => [
+                    'class'       => 'form-control',
+                    'placeholder' => 'ABC-123',
                 ],
             ])
             ->add('price', MoneyType::class, [
                 'label'    => 'Цена',
                 'currency' => 'RUB',
                 'attr'     => ['class' => 'form-control'],
-                'constraints' => [
-                    new Assert\NotNull(message: 'Укажите цену'),
-                    new Assert\PositiveOrZero(),
-                ],
             ])
+            // Обязательное поле связи ManyToOne -> Category
             ->add('category', EntityType::class, [
                 'class'        => Category::class,
                 'choice_label' => 'name',
                 'label'        => 'Категория',
-                'placeholder'  => 'Выберите категорию',
-                'required'     => false,
+                'placeholder'  => '--- Выберите категорию ---',
+                'required'     => true,
                 'attr'         => ['class' => 'form-select'],
             ])
             ->add('save', SubmitType::class, [

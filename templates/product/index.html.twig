@@ -41,9 +41,22 @@
                 <td>{{ product.sku }}</td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.category ? product.category.name : 'Без категории' }}</td>
-                <td>
+                <td class="text-nowrap">
                     <a href="{{ path('product_show', {id: product.id}) }}"
-                       class="btn btn-sm btn-outline-primary">Открыть</a>
+                    class="btn btn-sm btn-outline-primary">Открыть</a>
+
+                    <a href="{{ path('product_edit', {id: product.id}) }}"
+                    class="btn btn-sm btn-outline-secondary">Ред.</a>
+
+                    <form method="post"
+                        action="{{ path('product_delete', {id: product.id}) }}"
+                        class="d-inline-block"
+                        onsubmit="return confirm('Вы уверены, что хотите удалить товар «{{ product.name|e('js') }}»?');">
+                        {# Имя токена ДОЛЖНО совпадать с 'delete_product_' ~ id в контроллере #}
+                        <input type="hidden" name="_token"
+                            value="{{ csrf_token('delete_product_' ~ product.id) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
                 </td>
             </tr>
         {% else %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование товара{% endblock %}
+
+{% block body %}
+    <h1>Редактирование товара: {{ product.name }}</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <a href="{{ path('product_list') }}" class="btn btn-link mt-3">Отмена</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
